@@ -15,6 +15,7 @@
 		<module>job-admin</module>
 		<module>job-core</module>
 		<module>job-springboot</module>
+		<module>job-spring</module>
 	</modules>
 
 	<properties>
