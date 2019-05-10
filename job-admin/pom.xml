@@ -64,6 +64,13 @@
 			<version>${mysql-connector-java.version}</version>
 		</dependency>
 
+		<!-- oracle -->
+		<dependency>
+			<groupId>oracle</groupId>
+			<artifactId>ojdbc6-11.2.0.4</artifactId>
+			<version>${oracle.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
