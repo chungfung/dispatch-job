@@ -29,6 +29,7 @@ public class IndexController {
 
 	@Resource
 	private XxlJobService xxlJobService;
+
 	@Resource
 	private LoginService loginService;
 
