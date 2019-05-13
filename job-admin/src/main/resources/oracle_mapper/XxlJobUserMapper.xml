@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxl.job.admin.dao.XxlJobUserDao">
-
 	<resultMap id="XxlJobUser" type="com.xxl.job.admin.core.model.XxlJobUser" >
 		<result column="id" property="id" />
 		<result column="username" property="username" />
@@ -11,31 +10,28 @@
 	    <result column="permission" property="permission" />
 	</resultMap>
 
-	<sql id="Base_Column_List">
-		t.id,
-		t.username,
-		t.password,
-		t.role,
-		t.permission
-	</sql>
-
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobUser">
-		SELECT <include refid="Base_Column_List" />
-		FROM TD_USER t
+		SELECT T.ID,
+				T.USERNAME,
+				T.PASSWORD,
+				T.ROLE,
+				T.PERMISSION
+		FROM (SELECT  ROWNUM RN, t1.*  FROM TD_USER  t1
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
-				AND t.username like CONCAT(CONCAT('%', #{username}), '%')
+				AND t1.username like CONCAT(CONCAT('%', #{username}), '%')
 			</if>
 			<if test="role gt -1">
-				AND t.role = #{role}
+				AND t1.role = #{role}
 			</if>
 		</trim>
-		ORDER BY username ASC
-		LIMIT #{offset}, #{pagesize}
+		) t
+		WHERE  RN <![CDATA[  >=( #{offset}+1) ]]>  AND RN<![CDATA[   <= (#{offset}+#{pagesize})  ]]>
+		ORDER BY USERNAME ASC
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
-		SELECT count(1)
+		SELECT COUNT(*)
 		FROM TD_USER t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="username != null and username != ''">
@@ -48,9 +44,13 @@
 	</select>
 
 	<select id="loadByUserName" parameterType="java.util.HashMap" resultMap="XxlJobUser">
-		SELECT <include refid="Base_Column_List" />
-		FROM TD_USER t
-		WHERE t.username = #{username}
+		SELECT T.ID,
+				T.USERNAME,
+				T.PASSWORD,
+				T.ROLE,
+				T.PERMISSION
+		FROM TD_USER T
+		WHERE T.USERNAME = #{username}
 	</select>
 
 	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobUser" useGeneratedKeys="true" keyProperty="id" >
@@ -64,7 +64,7 @@
 			#{password},
 			#{role},
 			#{permission}
-		);
+		)
 	</insert>
 
 	<update id="update" parameterType="com.xxl.job.admin.core.model.XxlJobUser" >
@@ -79,9 +79,7 @@
 	</update>
 
 	<delete id="delete" parameterType="java.util.HashMap">
-		DELETE
-		FROM TD_USER
-		WHERE id = #{id}
+		DELETE FROM TD_USER WHERE ID = #{id}
 	</delete>
 
 </mapper>

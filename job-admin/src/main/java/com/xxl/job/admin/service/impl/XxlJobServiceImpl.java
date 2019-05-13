@@ -352,10 +352,10 @@ public class XxlJobServiceImpl implements XxlJobService {
 		List<Map<String, Object>> triggerCountMapAll = xxlJobLogDao.triggerCountByDay(startDate, endDate);
 		if (triggerCountMapAll!=null && triggerCountMapAll.size()>0) {
 			for (Map<String, Object> item: triggerCountMapAll) {
-				String day = String.valueOf(item.get("triggerDay"));
-				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("triggerDayCount")));
-				int triggerDayCountRunning = Integer.valueOf(String.valueOf(item.get("triggerDayCountRunning")));
-				int triggerDayCountSuc = Integer.valueOf(String.valueOf(item.get("triggerDayCountSuc")));
+				String day = String.valueOf(item.get("TRIGGERDAY"));
+				int triggerDayCount = Integer.valueOf(String.valueOf(item.get("TRIGGERDAYCOUNT")));
+				int triggerDayCountRunning = Integer.valueOf(String.valueOf(item.get("TRIGGERDAYCOUNTRUNNING")));
+				int triggerDayCountSuc = Integer.valueOf(String.valueOf(item.get("TRIGGERDAYCOUNTSUC")));
 				int triggerDayCountFail = triggerDayCount - triggerDayCountRunning - triggerDayCountSuc;
 
 				triggerDayList.add(day);
