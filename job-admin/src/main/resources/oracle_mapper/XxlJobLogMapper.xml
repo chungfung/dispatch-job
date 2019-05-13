@@ -122,14 +122,19 @@
 	</select>
 
 	
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLog">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			SELECT SEQ_TD_TRIGGER_LOG.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT INTO TD_TRIGGER_LOG (
-			job_group,
-			job_id,
-			trigger_time,
-			trigger_code,
-			handle_code
+			ID,
+			JOB_GROUP,
+			JOB_ID,
+			TRIGGER_TIME,
+			TRIGGER_CODE,
+			HANDLE_CODE
 		) VALUES (
+			#{id,jdbcType=DECIMAL},
 			#{jobGroup},
 			#{jobId},
 			#{triggerTime},
@@ -138,18 +143,18 @@
 		)
 	</insert>
 
-	<update id="updateTriggerInfo" >
+	<update id="updateTriggerInfo" parameterType="com.xxl.job.admin.core.model.XxlJobLog">
 		UPDATE TD_TRIGGER_LOG
 		SET
-			trigger_time= #{triggerTime},
-			trigger_code= #{triggerCode},
-			trigger_msg= #{triggerMsg},
+			trigger_time= #{triggerTime,jdbcType=TIMESTAMP},
+			trigger_code= #{triggerCode,jdbcType=DECIMAL},
+			trigger_msg= #{triggerMsg,jdbcType=VARCHAR},
 			executor_address= #{executorAddress, jdbcType=VARCHAR},
 			executor_handler=#{executorHandler, jdbcType=VARCHAR},
 			executor_param= #{executorParam, jdbcType=VARCHAR},
-			executor_sharding_param= #{executorShardingParam},
-			executor_fail_retry_count= #{executorFailRetryCount}
-		WHERE id= #{id}
+			executor_sharding_param= #{executorShardingParam,jdbcType=VARCHAR},
+			executor_fail_retry_count= #{executorFailRetryCount,jdbcType=DECIMAL}
+		WHERE id= #{id,jdbcType=DECIMAL}
 	</update>
 
 	<update id="updateHandleInfo">

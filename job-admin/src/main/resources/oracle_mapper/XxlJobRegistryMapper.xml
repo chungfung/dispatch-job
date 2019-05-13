@@ -31,12 +31,17 @@
     </update>
 
     <insert id="registrySave" >
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			SELECT SEQ_TD_TRIGGER_REGISTRY.NEXTVAL FROM DUAL
+		</selectKey>
          INSERT INTO TD_TRIGGER_REGISTRY (
+			ID,
          	REGISTRY_GROUP,
          	REGISTRY_KEY,
       		REGISTRY_VALUE,
       		UPDATE_TIME)
-    	VALUES (#{registryGroup,jdbcType=VARCHAR},
+    	 VALUES (#{id,jdbcType=DECIMAL},
+				 #{registryGroup,jdbcType=VARCHAR},
     			 #{registryKey,jdbcType=VARCHAR},
       			 #{registryValue,jdbcType=VARCHAR},
       			 sysdate)

@@ -29,6 +29,22 @@ DROP INDEX TD_TRIGGER_REGISTRY.IDX_TRIGGER_REGISTRY_GROUP_KEY_VALUE ;
 DROP INDEX TD_TRIGGERS.IDX_TRIGGERS_NAME_NAME_GROUP ;
 DROP INDEX TD_USER.IDX_USER_USERNAME ;
 
+/** 删除序列 */
+DROP SEQUENCE SEQ_TD_TRIGGER_GROUP;
+DROP SEQUENCE SEQ_TD_TRIGGER_INFO;
+DROP SEQUENCE SEQ_TD_TRIGGER_LOG;
+DROP SEQUENCE SEQ_TD_TRIGGER_LOGGLUE;
+DROP SEQUENCE SEQ_TD_TRIGGER_REGISTRY;
+DROP SEQUENCE SEQ_TD_USER;
+
+/** 创建序列 */
+CREATE SEQUENCE SEQ_TD_TRIGGER_GROUP START WITH 1 INCREMENT BY 1 NOMAXVALUE NOMINVALUE NOCYCLE NOCACHE;
+CREATE SEQUENCE SEQ_TD_TRIGGER_INFO START WITH 1 INCREMENT BY 1 NOMAXVALUE NOMINVALUE NOCYCLE NOCACHE;
+CREATE SEQUENCE SEQ_TD_TRIGGER_LOG START WITH 1 INCREMENT BY 1 NOMAXVALUE NOMINVALUE NOCYCLE NOCACHE;
+CREATE SEQUENCE SEQ_TD_TRIGGER_LOGGLUE START WITH 1 INCREMENT BY 1 NOMAXVALUE NOMINVALUE NOCYCLE NOCACHE;
+CREATE SEQUENCE SEQ_TD_TRIGGER_REGISTRY START WITH 1 INCREMENT BY 1 NOMAXVALUE NOMINVALUE NOCYCLE NOCACHE;
+CREATE SEQUENCE SEQ_TD_USER START WITH 1 INCREMENT BY 1 NOMAXVALUE NOMINVALUE NOCYCLE NOCACHE;
+
 /*==============================================================*/
 /* Table: TD_BLOB_TRIGGERS                                      */
 /*==============================================================*/
@@ -177,7 +193,7 @@ CREATE TABLE TD_SIMPROP_TRIGGERS
 /*==============================================================*/
 CREATE TABLE TD_TRIGGER_GROUP
 (
-   ID                   NUMBER(11)                     GENERATED ALWAYS AS IDENTITY,
+   ID                   NUMBER(11)                     NOT NULL,
    APP_NAME             VARCHAR2(64)                   NULL,
    TITLE                VARCHAR2(15)                   NULL,
    "ORDER"              NUMBER(4)                      NULL,
@@ -191,7 +207,7 @@ CREATE TABLE TD_TRIGGER_GROUP
 /*==============================================================*/
 CREATE TABLE TD_TRIGGER_INFO
 (
-   ID                   NUMBER(11)                     GENERATED ALWAYS AS IDENTITY,
+   ID                   NUMBER(11)                     NOT NULL,
    JOB_GROUP            NUMBER(11)                     NULL,
    JOB_CRON             VARCHAR2(128)                  NULL,
    JOB_DESC             VARCHAR2(255)                  NULL,
@@ -218,7 +234,7 @@ CREATE TABLE TD_TRIGGER_INFO
 /*==============================================================*/
 CREATE TABLE TD_TRIGGER_LOG
 (
-   ID                   NUMBER(20)                     GENERATED ALWAYS AS IDENTITY,
+   ID                   NUMBER(20)                     NOT NULL,
    JOB_GROUP            NUMBER(11)                     NULL,
    JOB_ID               NUMBER(11)                     NULL,
    EXECUTOR_ADDRESS     VARCHAR2(255)                  NULL,
@@ -258,7 +274,7 @@ HANDLE_CODE ASC
 /*==============================================================*/
 CREATE TABLE TD_TRIGGER_LOGGLUE
 (
-   ID                   NUMBER(11)                     GENERATED ALWAYS AS IDENTITY,
+   ID                   NUMBER(11)                     NOT NULL,
    JOB_ID               NUMBER(11)                     NULL,
    GLUE_TYPE            VARCHAR(50)                    NULL,
    GLUE_SOURCE          VARCHAR(4000)                  NULL,
@@ -273,7 +289,7 @@ CREATE TABLE TD_TRIGGER_LOGGLUE
 /*==============================================================*/
 CREATE TABLE TD_TRIGGER_REGISTRY
 (
-   ID                   NUMBER(11)                     GENERATED ALWAYS AS IDENTITY,
+   ID                   NUMBER(11)                     NOT NULL,
    REGISTRY_GROUP       VARCHAR2(255)                  NULL,
    REGISTRY_KEY         VARCHAR2(255)                  NULL,
    REGISTRY_VALUE       VARCHAR2(255)                  NULL,
@@ -328,7 +344,7 @@ JOB_GROUP ASC
 /*==============================================================*/
 CREATE TABLE TD_USER
 (
-   ID                   NUMBER(11)                     GENERATED ALWAYS AS IDENTITY,
+   ID                   NUMBER(11)                     NOT NULL,
    USERNAME             VARCHAR2(50)                   NULL,
    PASSWORD             VARCHAR2(50)                   NULL,
    ROLE                 NUMBER(4)                      NULL,
@@ -343,43 +359,6 @@ CREATE UNIQUE INDEX IDX_USER_USERNAME ON TD_USER (
 USERNAME ASC
 );
 
-INSERT INTO TD_TRIGGER_GROUP(app_name, title, "ORDER", address_type, address_list) VALUES ('xxl-job-executor-sample', '示例执行器', 1, 0, NULL);
-INSERT INTO TD_USER(username, password, role, permission) VALUES ('admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
-INSERT INTO TD_TRIGGER_INFO
-(job_group,
- job_cron,
- job_desc,
- add_time,
- update_time,
- author,
- alarm_email,
- executor_route_strategy,
- executor_handler,
- executor_param,
- executor_block_strategy,
- executor_timeout,
- executor_fail_retry_count,
- glue_type,
- glue_source,
- glue_remark,
- glue_updatetime,
- child_jobid)
-VALUES
-   (1,
-      '0 0 0 * * ? *',
-      '测试任务1',
-      to_date('2018-11-03 22:21:31', 'yyyy-mm-dd hh24:mi:ss'),
-      to_date('2018-11-03 22:21:31', 'yyyy-mm-dd hh24:mi:ss'),
-      'XXL',
-      '',
-      'FIRST',
-      'demoJobHandler',
-      '',
-      'SERIAL_EXECUTION',
-    0,
-    0,
-    'BEAN',
-    '',
-    'GLUE代码初始化',
-    to_date('2018-11-03 22:21:31', 'yyyy-mm-dd hh24:mi:ss'),
-    '');
+INSERT INTO TD_TRIGGER_GROUP(id,app_name, title, "ORDER", address_type, address_list) VALUES (SEQ_TD_TRIGGER_GROUP.nextval,'xxl-job-executor-sample', '示例执行器', 1, 0, NULL);
+INSERT INTO TD_USER(id,username, password, role, permission) VALUES (SEQ_TD_USER.nextval,'admin', 'e10adc3949ba59abbe56e057f20f883e', 1, NULL);
+INSERT INTO TD_TRIGGER_INFO   (id,    job_group,    job_cron,    job_desc,    add_time,    update_time,    author,    alarm_email,    executor_route_strategy,    executor_handler,    executor_param,    executor_block_strategy,    executor_timeout,    executor_fail_retry_count,    glue_type,    glue_source,    glue_remark,    glue_updatetime,    child_jobid) VALUES   (seq_TD_TRIGGER_INFO.nextval,    1,    '0 0 0 * * ? *',    '测试任务1',    to_date('2018-11-03 22:21:31', 'yyyy-mm-dd hh24:mi:ss'),    to_date('2018-11-03 22:21:31', 'yyyy-mm-dd hh24:mi:ss'),    'XXL',    '',    'FIRST',    'demoJobHandler',    '',    'SERIAL_EXECUTION',    0,    0,    'BEAN',    '',    'GLUE代码初始化',    to_date('2018-11-03 22:21:31', 'yyyy-mm-dd hh24:mi:ss'),    '');

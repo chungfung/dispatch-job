@@ -78,9 +78,13 @@
 		</trim>
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			SELECT SEQ_TD_TRIGGER_INFO.NEXTVAL FROM DUAL
+		</selectKey>
 		insert into TD_TRIGGER_INFO
-				(JOB_GROUP,
+			   (ID,
+				JOB_GROUP,
 				JOB_CRON,
 				JOB_DESC,
 				ADD_TIME,
@@ -98,7 +102,8 @@
 				GLUE_REMARK,
 				GLUE_UPDATETIME,
 				CHILD_JOBID)
-		values (#{jobGroup,jdbcType=DECIMAL},
+		values (#{id,jdbcType=DECIMAL},
+				#{jobGroup,jdbcType=DECIMAL},
 				#{jobCron,jdbcType=VARCHAR},
 				#{jobDesc,jdbcType=VARCHAR},
 				sysdate,
@@ -115,8 +120,7 @@
 				#{glueSource,jdbcType=VARCHAR},
 				#{glueRemark,jdbcType=VARCHAR},
 				sysdate,
-				#{childJobid,jdbcType=VARCHAR})
-		)
+				#{childJobId,jdbcType=VARCHAR})
 	</insert>
 
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
@@ -161,7 +165,7 @@
 			GLUE_SOURCE = #{glueSource,jdbcType=VARCHAR},
 			GLUE_REMARK = #{glueRemark,jdbcType=VARCHAR},
 			GLUE_UPDATETIME = #{glueUpdatetime,jdbcType=TIMESTAMP},
-			CHILD_JOBID = #{childJobid,jdbcType=VARCHAR}
+			CHILD_JOBID = #{childJobId,jdbcType=VARCHAR}
 		WHERE ID = #{id}
 	</update>
 

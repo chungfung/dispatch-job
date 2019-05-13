@@ -17,7 +17,6 @@ import java.io.IOException;
 
 /**
  * common exception resolver
- *
  * @author xuxueli 2016-1-6 19:22:18
  */
 @Component
@@ -54,7 +53,6 @@ public class WebExceptionResolver implements HandlerExceptionResolver {
 			}
 			return mv;
 		} else {
-
 			mv.addObject("exceptionMsg", errorResult.getMsg());
 			mv.setViewName("/common/common.exception");
 			return mv;

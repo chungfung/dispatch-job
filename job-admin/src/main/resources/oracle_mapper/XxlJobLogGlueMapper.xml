@@ -12,15 +12,20 @@
 	    <result column="update_time" property="updateTime" />
 	</resultMap>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			SELECT SEQ_TD_TRIGGER_LOGGLUE.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT INTO TD_TRIGGER_LOGGLUE (
+			  ID,
 			  JOB_ID,
 			  GLUE_TYPE,
 			  GLUE_SOURCE,
 			  GLUE_REMARK,
 			  ADD_TIME,
 			  UPDATE_TIME)
-        VALUES (#{jobId,jdbcType=DECIMAL},
+        VALUES (#{id,jdbcType=DECIMAL},
+				#{jobId,jdbcType=DECIMAL},
 				#{glueType,jdbcType=VARCHAR},
 				#{glueSource,jdbcType=VARCHAR},
 				#{glueRemark,jdbcType=VARCHAR},

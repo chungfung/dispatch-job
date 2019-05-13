@@ -35,10 +35,8 @@ public class IndexController {
 
 	@RequestMapping("/")
 	public String index(Model model) {
-
 		Map<String, Object> dashboardMap = xxlJobService.dashboardInfo();
 		model.addAllAttributes(dashboardMap);
-
 		return "index";
 	}
 
@@ -61,7 +59,11 @@ public class IndexController {
 	@RequestMapping(value="login", method= RequestMethod.POST)
 	@ResponseBody
 	@PermissionLimit(limit=false)
-	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
+	public ReturnT<String> loginDo(HttpServletRequest request,
+								   HttpServletResponse response,
+								   String userName,
+								   String password,
+								   String ifRemember){
 		boolean ifRem = (ifRemember!=null && ifRemember.trim().length()>0 && "on".equals(ifRemember))?true:false;
 		return loginService.login(request, response, userName, password, ifRem);
 	}
@@ -75,11 +77,6 @@ public class IndexController {
 	
 	@RequestMapping("/help")
 	public String help() {
-
-		/*if (!PermissionInterceptor.ifLogin(request)) {
-			return "redirect:/toLogin";
-		}*/
-
 		return "help";
 	}
 
@@ -89,5 +86,4 @@ public class IndexController {
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
-	
 }

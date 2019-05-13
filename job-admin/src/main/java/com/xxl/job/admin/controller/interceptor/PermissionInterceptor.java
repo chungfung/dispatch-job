@@ -52,8 +52,6 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 			}
 			request.setAttribute(LoginService.LOGIN_IDENTITY_KEY, loginUser);
 		}
-
 		return super.preHandle(request, response, handler);
 	}
-	
 }

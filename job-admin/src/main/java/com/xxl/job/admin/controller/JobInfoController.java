@@ -37,16 +37,21 @@ public class JobInfoController {
 
 	@Resource
 	private XxlJobGroupDao xxlJobGroupDao;
+
 	@Resource
 	private XxlJobService xxlJobService;
 	
 	@RequestMapping
-	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
+	public String index(HttpServletRequest request,
+						Model model,
+						@RequestParam(required = false, defaultValue = "-1") int jobGroup) {
 
-		// 枚举-字典
-		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());	// 路由策略-列表
-		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());								// Glue类型-字典
-		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	// 阻塞处理策略-字典
+		// 路由策略-列表
+		model.addAttribute("ExecutorRouteStrategyEnum", ExecutorRouteStrategyEnum.values());
+		// Glue类型-字典
+		model.addAttribute("GlueTypeEnum", GlueTypeEnum.values());
+		// 阻塞处理策略-字典
+		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());
 
 		// 执行器列表
 		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
@@ -56,7 +61,6 @@ public class JobInfoController {
 		if (jobGroupList==null || jobGroupList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
-
 		model.addAttribute("JobGroupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
 
@@ -131,9 +135,7 @@ public class JobInfoController {
 	
 	@RequestMapping("/trigger")
 	@ResponseBody
-	//@PermissionLimit(limit = false)
 	public ReturnT<String> triggerJob(int id, String executorParam) {
-		// force cover job param
 		if (executorParam == null) {
 			executorParam = "";
 		}
@@ -141,5 +143,4 @@ public class JobInfoController {
 		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam);
 		return ReturnT.SUCCESS;
 	}
-	
 }

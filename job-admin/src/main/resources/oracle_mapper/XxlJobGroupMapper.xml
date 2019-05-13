@@ -34,14 +34,19 @@
 		ORDER BY T."ORDER" ASC
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobGroup">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+			SELECT SEQ_TD_TRIGGER_GROUP.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT INTO TD_TRIGGER_GROUP (
+			ID,
 			APP_NAME,
 			TITLE,
 			"ORDER",
 			ADDRESS_TYPE,
 			ADDRESS_LIST)
-		values (#{appName},
+		values ( #{id,jdbcType=DECIMAL},
+				  #{appName},
 				  #{title},
 				  #{order},
 				  #{addressType},
